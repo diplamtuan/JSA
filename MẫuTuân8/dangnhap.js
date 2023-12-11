@@ -6,7 +6,6 @@ let errorMessageEmail = errorMessages[0];
 let errorMessagePassword = errorMessages[1];
 
 // Bien chua tai khoan he thong
-
 const account = {
   email: "khang123@gmail.com",
   pass: "123123",
@@ -16,6 +15,7 @@ const account = {
 btnLogin.addEventListener("click", function () {
   let emailValue = emailInput.value;
   let passValue = passwordInput.value;
+
   // Kiểm tra mật khẩu và tài khoản đã rỗng chưa
   if (emailValue !== "" && passValue !== "") {
     // email và mật khẩu đều không rỗng

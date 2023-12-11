@@ -1,10 +1,9 @@
-let btn = document.querySelectorAll(".btn");
+// thẻ chứa số lượng sản phẩm trên giỏ hàng
 let quantity = document.querySelector(".quantity");
+// content phần chứa danh sách sản phẩm
 let content = document.querySelector(".content");
 // let cartArray = JSON.parse(localStorage.getItem("cart")) || [];
-let cartArray = [];
-
-let currentQuantity = +quantity.innerText;
+let cartArray = JSON.parse(localStorage.getItem("cart")) || [];
 
 function checkLogin() {
   if (localStorage.getItem("dangnhap")) {
@@ -51,18 +50,17 @@ function loadDanhSachSanPham() {
         </div>
     `;
   }
-
   // Lay nut mua hang
   let btnAddItems = document.querySelectorAll(".btn");
   for (let i = 0; i < btnAddItems.length; i++) {
     let btnItem = btnAddItems[i];
     btnItem.addEventListener("click", function (e) {
       e.stopPropagation();
+      // Tạo biến idItem để chứa id của của nút mua hàng khi ta click
       let idItem = btnItem.id;
       addCart(idItem);
     });
   }
-
   // Them su kien click vao content-item
   let contentItems = document.querySelectorAll(".content-item");
   for (let i = 0; i < contentItems.length; i++) {
@@ -75,11 +73,10 @@ function loadDanhSachSanPham() {
   }
 }
 
-// Kiểm tra localStorage nếu có thì đặt số lượng vào quantity Nếu không có thì set bằng 0
-
-function addCart(id) {
-  const dataItem = findData(id);
-  console.log(dataItem);
+// Function addCart
+function addCart(idClicked) {
+  // dataItem là object mà ta đã click
+  const dataItem = findData(idClicked);
   let cartLocalStorage = JSON.parse(localStorage.getItem("cart")) || [];
   if (cartLocalStorage.length > 0) {
     let isCheckedCart = false;
@@ -109,6 +106,8 @@ function findData(id) {
     }
   }
 }
+
+// Kiểm tra localStorage nếu có thì đặt số lượng vào quantity Nếu không có thì set bằng 0
 function loadQuantity() {
   let quantityArray = JSON.parse(localStorage.getItem("cart"));
   if (quantityArray) {
@@ -132,7 +131,6 @@ function loadCart() {
   // lấy thằng element cart-product-wrapper = "cart-wrapper"
   let cartWrapper = document.querySelector(".cart-product-wrapper");
   let cartArrayInner = JSON.parse(localStorage.getItem("cart")) || [];
-  let cartArray = JSON.parse(localStorage.getItem("cart"));
   let html = "";
   // Nó sẽ kiểm tra trên localstorage có key cart hay không ?
   if (cartArrayInner.length > 0) {
@@ -140,11 +138,11 @@ function loadCart() {
     // Thì nó sẽ ...
     // cart-wrapper.innerHTML = `ul danh sach`
     html += `<ul class="cart-products">`;
-    for (let i = 0; i < cartArray.length; i++) {
-      let image = cartArray[i].img;
-      let name = cartArray[i].name;
-      let price = cartArray[i].price;
-      let id = cartArray[i].id;
+    for (let i = 0; i < cartArrayInner.length; i++) {
+      let image = cartArrayInner[i].img;
+      let name = cartArrayInner[i].name;
+      let price = cartArrayInner[i].price;
+      let id = cartArrayInner[i].id;
       html += `
             <li class="product-item">
             <img src=${image} alt="sanpham1">
@@ -179,33 +177,27 @@ function loadCart() {
 }
 
 // Ham chay
-
 loadDanhSachSanPham();
 checkLogin();
 loadCart();
 
-// Xoa san pham
-//  1 Dau tien tao mảng []
-//  2. Lấy được id cần xóa (id:1)
-// 3. Dùng vòng for để lập qua từng phần tử trong giỏ hàng
-// 4. if(!id:1 == id cua phan tu thu i){
-// push phan tu thu i vao [ư]
-// }
-//
-
 function deleteCart(id) {
   let newCart = [];
   let oldCart = JSON.parse(localStorage.getItem("cart"));
+  console.log(oldCart);
   for (let i = 0; i < oldCart.length; i++) {
     if (id !== oldCart[i].id) {
       newCart.push(oldCart[i]);
     }
   }
   // Mat du lieu
+  console.log(newCart);
   localStorage.setItem("cart", JSON.stringify(newCart));
   // Mat giao dien
   loadCart();
 }
+
+// function tính tổng tiền
 
 function sumPrice() {
   let cartLocal = JSON.parse(localStorage.getItem("cart"));
